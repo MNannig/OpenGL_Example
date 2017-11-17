@@ -44,7 +44,7 @@ int g_gl_height = 690;
 GLFWwindow* g_window = NULL;
 
 unsigned int index_mesh = 0;
-char ar_models[7][30] = {"mallas/deer2.obj", "mallas/paper cup.obj", "mallas/deer.obj", "mallas/MAMMOTH.obj", "mallas/Wolf.obj", "mallas/TUNA.obj", "mallas/M4A1.obj"};
+char ar_models[7][30] = {"mallas/triangle.obj", "mallas/paper cup.obj", "mallas/deer2.obj", "mallas/MAMMOTH.obj", "mallas/Wolf.obj", "mallas/TUNA.obj", "mallas/M4A1.obj"};
 
 
 vec3 pos;
