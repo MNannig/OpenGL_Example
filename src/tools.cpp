@@ -16,16 +16,16 @@ bool load_mesh (const char* file_name, GLuint* vao, int* point_count) {
 		fprintf (stderr, "ERROR: reading mesh %s\n", file_name);
 		return false;
 	}
-	printf ("  %i animations\n", scene->mNumAnimations);
-	printf ("  %i cameras\n", scene->mNumCameras);
-	printf ("  %i lights\n", scene->mNumLights);
-	printf ("  %i materials\n", scene->mNumMaterials);
-	printf ("  %i meshes\n", scene->mNumMeshes);
-	printf ("  %i textures\n", scene->mNumTextures);
+	//printf ("  %i animations\n", scene->mNumAnimations);
+	//printf ("  %i cameras\n", scene->mNumCameras);
+	//printf ("  %i lights\n", scene->mNumLights);
+	//printf ("  %i materials\n", scene->mNumMaterials);
+	//printf ("  %i meshes\n", scene->mNumMeshes);
+	//printf ("  %i textures\n", scene->mNumTextures);
 	
 	/* get first mesh in file only */
 	const aiMesh* mesh = scene->mMeshes[0];
-	printf ("    %i vertices in mesh[0]\n", mesh->mNumVertices);
+	//printf ("    %i vertices in mesh[0]\n", mesh->mNumVertices);
 	
 	/* pass back number of vertex points in mesh */
 	*point_count = mesh->mNumVertices;
@@ -117,7 +117,7 @@ bool load_mesh (const char* file_name, GLuint* vao, int* point_count) {
 	}
 	
 	aiReleaseImport (scene);
-	printf ("mesh loaded\n");
+	//printf ("mesh loaded\n");
 	
 	return true;
 }

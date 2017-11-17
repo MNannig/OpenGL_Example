@@ -43,12 +43,16 @@ int g_gl_width = 1280;
 int g_gl_height = 690;
 GLFWwindow* g_window = NULL;
 
+
 unsigned int index_mesh = 0;
 char ar_models[7][30] = {"mallas/triangle.obj", "mallas/paper cup.obj", "mallas/deer2.obj", "mallas/MAMMOTH.obj", "mallas/Wolf.obj", "mallas/TUNA.obj", "mallas/M4A1.obj"};
 
 
 vec3 pos;
 
+#define RANGOX 50.0
+#define RANGOY 50.0
+#define RANGOZ -10.0
 
 int main(const int argc, const char *argv[]){
 	 srand(time(NULL));
@@ -66,15 +70,18 @@ int main(const int argc, const char *argv[]){
     }
     L = atoi(argv[1]);
     index_mesh = atoi(argv[2]); 
-    unsigned long L3 = L*L;
+    unsigned long L3 = L;
  	vec3 *obj_pos_wor= (vec3*)malloc(sizeof(vec3)*L3);
     printf("creando %lu posiciones de mallas.....", L3); fflush(stdout);
  	for (int i = 0; i < L3; ++i)
  	{
         vec3 a;
-        a.v[0] = rand() % 100;
-        a.v[1] = rand() % 100;
-        a.v[2] = 0; 
+        float r = (float)rand()/RAND_MAX;
+        a.v[0] = r*RANGOX  -  (float)RANGOX/2.0;
+        r = (float)rand()/RAND_MAX;
+        a.v[1] = r*RANGOY  -  (float)RANGOY/2.0;
+        r = (float)rand()/RAND_MAX;
+        a.v[2] = r*RANGOZ; 
         obj_pos_wor[i] = a;
        
  	}
@@ -83,6 +90,7 @@ int main(const int argc, const char *argv[]){
   
 	restart_gl_log ();
 	start_gl ();
+    glfwSwapInterval(0);
 	glEnable (GL_DEPTH_TEST); // enable depth-testing
 	glDepthFunc (GL_LESS); // depth-testing interprets a smaller value as "closer"
 	glEnable (GL_CULL_FACE); // cull face
@@ -91,9 +99,10 @@ int main(const int argc, const char *argv[]){
 	glClearColor (0.2, 0.2, 0.2, 1.0); // grey background to help spot mistakes
 	glViewport (0, 0, g_gl_width, g_gl_height);
 
-    /* objeto enemigo */
-    enemigo *e1 = new enemigo((char*)ar_models[index_mesh]);
 
+    /* objetos enemigos */
+    enemigo **e = (enemigo**)malloc(sizeof(enemigo*)*L3);
+    
 	
 /*-------------------------------CREATE SHADERS-------------------------------*/
 	GLuint shader_programme = create_programme_from_files (
@@ -125,7 +134,7 @@ int main(const int argc, const char *argv[]){
 /*-------------------------------CREATE CAMERA--------------------------------*/
 	float cam_speed = 8.0f; // 1 unit per second
 	float cam_yaw_speed = 30.0f; // 10 degrees per second
-	float cam_pos[] = {0.0f, 0.0f, 5.0f}; // don't start at zero, or we will be too close
+	float cam_pos[] = {0.0f, 0.0f, 50.0f}; // don't start at zero, or we will be too close
 	float cam_yaw = 0.0f; // y-rotation in degrees
 	mat4 T = translate (identity_mat4 (), vec3 (-cam_pos[0], -cam_pos[1], -cam_pos[2]));
 	mat4 R = rotate_y_deg (identity_mat4 (), -cam_yaw);
@@ -135,6 +144,9 @@ int main(const int argc, const char *argv[]){
     printf("creando %lu matrices.....", L3); fflush(stdout);
 	for (int i = 0; i < NUM_OBJ; i++) {
 		model_mats[i] = translate (identity_mat4 (), obj_pos_wor[i]);
+	}
+	for (int i = 0; i < NUM_OBJ; i++) {
+        e[i] = new enemigo((char*)ar_models[index_mesh]);
 	}
     printf("ok\n");
 	
@@ -156,7 +168,13 @@ int main(const int argc, const char *argv[]){
 	glCullFace (GL_BACK); // cull back face
 	glFrontFace (GL_CCW); // GL_CCW for counter clock-wise
 */
+    float *alturas = (float*)malloc(sizeof(float)*L3);
     float altura = 0.0f;
+	for (int i = 0; i < NUM_OBJ; i++) {
+        float r = (float)rand()/RAND_MAX;
+        r = r*RANGOY  -  (float)RANGOY/2.0;
+        alturas[i] = r;
+    }
 	while (!glfwWindowShouldClose (g_window)) {
 		static double previous_seconds = glfwGetTime ();
 		double current_seconds = glfwGetTime ();
@@ -171,8 +189,11 @@ int main(const int argc, const char *argv[]){
 		glUseProgram (shader_programme);
 		
 		for (int i = 0; i < NUM_OBJ; i++) {
+            //mat4 rotate_y_deg (const mat4& m, float deg);
+            alturas[i] += ((float)(rand()%2) - 0.5f)/100.0f;
+            model_mats[i] = translate(identity_mat4(), obj_pos_wor[i] + vec3(0.0f, sin(alturas[i]), 0.0f));
 			glUniformMatrix4fv (model_mat_location, 1, GL_FALSE, model_mats[i].m);
-			glDrawArrays(GL_TRIANGLES,0,e1->getnumvertices());
+			glDrawArrays(GL_TRIANGLES,0,e[i]->getnumvertices());
 		}
 		// update other events like input handling 
 		glfwPollEvents ();

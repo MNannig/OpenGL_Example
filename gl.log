@@ -1,7 +1,7 @@
-GL_LOG_FILE log. local time Thu Nov 16 13:39:15 2017
+GL_LOG_FILE log. local time Fri Nov 17 16:47:08 2017
 
-starting GLFW 3.2.1 X11 GLX EGL clock_gettime /dev/js Xf86vm sharedrenderer: GeForce GTX 770/PCIe/SSE2
-version: 4.6.0 NVIDIA 387.12
+starting GLFW 3.2.1 X11 GLX EGL clock_gettime /dev/js Xf86vm sharedrenderer: TITAN X (Pascal)/PCIe/SSE2
+version: 4.6.0 NVIDIA 387.22
 creating shader from shaders/test_vs.glsl...
 shader compiled. index 1
 creating shader from shaders/test_fs.glsl...
