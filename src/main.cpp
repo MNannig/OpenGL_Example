@@ -45,7 +45,7 @@ GLFWwindow* g_window = NULL;
 
 
 unsigned int index_mesh = 0;
-char ar_models[7][30] = {"mallas/triangle.obj", "mallas/paper cup.obj", "mallas/deer2.obj", "mallas/MAMMOTH.obj", "mallas/Wolf.obj", "mallas/TUNA.obj", "mallas/M4A1.obj"};
+char ar_models[9][64] = {"mallas/triangle.obj", "mallas/paper cup.obj", "mallas/deer2.obj", "mallas/MAMMOTH.obj", "mallas/Wolf.obj", "mallas/TUNA.obj", "mallas/M4A1.obj", "mallas/suzanne.obj", "mallas/ufo.dae"};
 
 
 vec3 pos;
@@ -101,7 +101,8 @@ int main(const int argc, const char *argv[]){
 
 
     /* objetos enemigos */
-    enemigo **e = (enemigo**)malloc(sizeof(enemigo*)*L3);
+    //enemigo **e = (enemigo**)malloc(sizeof(enemigo*)*L3);
+    enemigo *e = new enemigo((char*)ar_models[index_mesh]);
     
 	
 /*-------------------------------CREATE SHADERS-------------------------------*/
@@ -145,9 +146,11 @@ int main(const int argc, const char *argv[]){
 	for (int i = 0; i < NUM_OBJ; i++) {
 		model_mats[i] = translate (identity_mat4 (), obj_pos_wor[i]);
 	}
+    /*
 	for (int i = 0; i < NUM_OBJ; i++) {
         e[i] = new enemigo((char*)ar_models[index_mesh]);
 	}
+    */
     printf("ok\n");
 	
 	int view_mat_location = glGetUniformLocation (shader_programme, "view");
@@ -193,7 +196,8 @@ int main(const int argc, const char *argv[]){
             alturas[i] += ((float)(rand()%2) - 0.5f)/100.0f;
             model_mats[i] = translate(identity_mat4(), obj_pos_wor[i] + vec3(0.0f, sin(alturas[i]), 0.0f));
 			glUniformMatrix4fv (model_mat_location, 1, GL_FALSE, model_mats[i].m);
-			glDrawArrays(GL_TRIANGLES,0,e[i]->getnumvertices());
+			//glDrawArrays(GL_TRIANGLES,0,e[i]->getnumvertices());
+			glDrawArrays(GL_TRIANGLES,0,e->getnumvertices());
 		}
 		// update other events like input handling 
 		glfwPollEvents ();
